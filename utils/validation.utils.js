@@ -21,4 +21,18 @@ const validateUserData = {
   }),
 };
 
-module.exports = { validateUserData };
+const validatePostData = {
+  body: Joi.object({
+    title: Joi.string().min(3).max(100).required(),
+    content: Joi.string().min(10).required(),
+  }),
+};
+
+const validateCommentData = {
+  body: Joi.object({
+    text: Joi.string().min(1).max(300).required(),
+    postId: Joi.string().length(24).hex().required()
+  }),
+};
+
+module.exports = { validateUserData, validatePostData, validateCommentData };

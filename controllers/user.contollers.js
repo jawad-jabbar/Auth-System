@@ -11,7 +11,7 @@ const userController = {
 
             let user = await User.findOne({ email });
             if (user) {
-                return res.status(400).json({ success: false, message: 'User already exists' });
+                return res.status(400).json({ error:error.message, message: 'User already exists' });
             }
 
             const hashedPassword = await hashPassword(password);
@@ -20,10 +20,18 @@ const userController = {
             const token = generateToken(newUser);
 
             const { password: _, ...restData } = newUser.toObject();
-            return res.status(201).json({ success: true, message: 'User registered successfully', user: restData, token });
+            return res.status(201).json({ 
+                message: 'User registered successfully', 
+                payload:{
+                    user: restData, token
+                } 
+            });
 
         } catch (error) {
-            return res.status(500).json({ success: false, error: 'Server error' });
+            return res.status(500).json({ 
+                message:"Server Error", 
+                error: error.message 
+            });
         }
     },
 
@@ -33,20 +41,32 @@ const userController = {
 
             const user = await User.findOne({ email });
             if (!user) {
-                return res.status(401).json({ success: false, message: 'Invalid email or password' });
+                return res.status(401).json({ 
+                    error:error.message , 
+                    message: 'Invalid email or password' 
+                });
             }
 
             const isMatch = await comparePassword(password, user.password);
             if (!isMatch) {
-                return res.status(401).json({ success: false, message: 'Invalid email or password' });
+                return res.status(401).json({ 
+                    error: error.message, 
+                    message: 'Invalid email or password' 
+                });
             }
 
             const token = generateToken(user);
             const { password: _, ...userData } = user.toObject();
-            return res.status(200).json({ success: true, message: 'Logged in successfully', user: userData, token });
+            return res.status(200).json({
+                message: 'Logged in successfully',                     
+                user: userData, token 
+            })
 
         } catch (error) {
-            return res.status(500).json({ success: false, error: 'Server error' });
+            return res.status(500).json({ 
+                message:"Server Error", 
+                error: error.message 
+            });
         }
     },
 
@@ -56,7 +76,10 @@ const userController = {
 
             const user = await User.findOne({ email });
             if (!user) {
-                return res.status(404).json({ success: false, message: "User not found" });
+                return res.status(404).json({ 
+                    error: error.message , 
+                    message: "User not found" 
+                });
             }
 
 
@@ -78,10 +101,15 @@ const userController = {
             await transporter.sendMail(mailOptions);
 
 
-            return res.status(200).json({ success: true, message: "OTP sent to your email" });
+            return res.status(200).json({ 
+                message: "OTP sent to your email" 
+            });
 
         } catch (error) {
-            return res.status(500).json({ success: false, error: "Server error" });
+            return res.status(500).json({
+                error: error.message, 
+                message:"Server Error" 
+            });
         }
 
     },
@@ -92,7 +120,10 @@ const userController = {
 
             const user = await User.findOne({ otp });
             if (!user || new Date() > user.otpExpires) {
-                return res.status(400).json({ success: false, message: "Invalid or expired OTP" });
+                return res.status(400).json({ 
+                    message: "Invalid or expired OTP",
+                    error: error.message
+                 });
             }
 
             user.password = await hashPassword(newPassword);
@@ -100,10 +131,15 @@ const userController = {
             user.otpExpires = undefined;
             await user.save();
 
-            return res.status(200).json({ success: true, message: "Password reset successfully" });
+            return res.status(200).json({ 
+                message: "Password reset successfully" 
+            });
 
         } catch (error) {
-            return res.status(500).json({ success: false, error: "Server error" });
+            return res.status(500).json({ 
+                message: "Server Error",
+                error: error.message 
+            });
         }
     },
 
@@ -121,7 +157,7 @@ const userController = {
             const totalUsers = await User.countDocuments();
 
             return res.status(200).json({
-                message: "",
+                message: "Users fetched successfully",
                 payload: {
                 totalUsers,
                 page,
@@ -131,7 +167,10 @@ const userController = {
             });
 
         } catch (error) {
-            return res.status(500).json({ error: 'Server error', message: "" });
+            return res.status(500).json({
+                message: "An error occurred while fetching users",
+                error: error.message
+            });
         }
     }
 };
