@@ -3,10 +3,15 @@ const Comment = require('../model/comment.model');
 const commentController = {
   createComment: async (req, res) => {
     try {
-      const { text, postId } = req.body;
+      const { postId, text } = req.body;
+      const image = req.file ? req.file.filename : null;
 
-      const comment = await Comment.create({ text, postId, createdBy: req.user._id });
-
+      const comment = await Comment.create({
+      postId,
+      text,
+      image,
+      createdBy: req.user._id
+      });
       return res.status(201).json({ comment });
     } catch (error) {
       return res.status(500).json({ message:"Error while posting the comment", error: error.message });
