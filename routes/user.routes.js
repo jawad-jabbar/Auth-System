@@ -12,6 +12,11 @@ router.post('/login', userLogin);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
 
-router.get('/users', authMiddleware, validateMiddleware(validateUserData.query, 'query'), getAllUsers)
+router.get('/users', 
+    authMiddleware(['admin']), 
+    validateMiddleware(validateUserData.query, 'query'),
+    getAllUsers
+);
+  
 
 module.exports = router;

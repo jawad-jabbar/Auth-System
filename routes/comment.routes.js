@@ -1,12 +1,20 @@
 const express = require('express');
-const { createComment, getAllComments } = require('../controllers/comment.controller');
+const router = express.Router();
+const upload = require('../middleware/upload.middleware');
 const authMiddleware = require('../middleware/auth-middleware');
+const { createComment } = require('../controllers/comment.controller');
 const validateMiddleware = require('../middleware/validateMiddleware');
 const { validateCommentData } = require('../utils/validation.utils');
+const commentController = require('../controllers/comment.controller');
 
-const router = express.Router();
+router.post(
+  '/',
+  authMiddleware,
+  upload.single('image'),
+  validateMiddleware(validateCommentData),
+  createComment
+);
 
-router.post('/', authMiddleware, validateMiddleware(validateCommentData), createComment);
-router.get('/', getAllComments);
+router.get('/comments',authMiddleware,commentController.getAllComments);
 
 module.exports = router;
