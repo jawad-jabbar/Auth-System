@@ -15,16 +15,9 @@ const commentController = {
 
   getAllComments: async (req, res) => {
     try {
-      const { postId, content } = req.body;
-      const image = req.file ? req.file.filename : null;
+      const comments = await Comment.find().populate('createdBy', 'name email').populate('postId', 'title');
 
-      const comment = await Comment.create({
-      postId,
-      content,
-      image,
-      createdBy: req.user._id
-      });
-      return res.status(200).json({ comment });
+      return res.status(200).json({ comments });
     } catch (error) {
       return res.status(500).json({ message:"Error while getting all comments", error: error.message });
     }

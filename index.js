@@ -10,8 +10,6 @@ const PORT = process.env.PORT || 5500;
 
 app.use(express.json());
 app.use('/api', routes);
-app.use('/uploads', express.static('uploads'));
-
     
 connectdb().then(()=>{
     app.listen(PORT, ()=>{
