@@ -24,7 +24,7 @@ const postController = {
 
       return res.status(200).json({ posts });
     } catch (error) {
-      return res.status(500).json({ message:"Error fetching all posts.", error: error.message });
+      return res.status(500).json({ message:"Error while fetching all posts.", error: error.message });
     }
   },
 };
