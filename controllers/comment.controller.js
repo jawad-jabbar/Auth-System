@@ -14,7 +14,7 @@ const commentController = {
       });
       return res.status(201).json({ comment });
     } catch (error) {
-      return res.status(500).json({ message:"Error while posting the comment", error: error.message });
+      return res.status(500).json({ message:"Error while posting the comment"});
     }
   },
 
@@ -24,7 +24,7 @@ const commentController = {
 
       return res.status(200).json({ comments });
     } catch (error) {
-      return res.status(500).json({ message:"Error while getting all comments", error: error.message });
+      return res.status(500).json({ message:"Error while getting all comments"});
     }
   },
 };

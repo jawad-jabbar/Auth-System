@@ -11,7 +11,7 @@ const userController = {
 
             let user = await User.findOne({ email });
             if (user) {
-                return res.status(400).json({ error:error.message, message: 'User already exists' });
+                return res.status(400).json({ message: 'User already exists' });
             }
 
             const hashedPassword = await hashPassword(password);
@@ -41,8 +41,7 @@ const userController = {
 
             const user = await User.findOne({ email });
             if (!user) {
-                return res.status(401).json({ 
-                    error:error.message , 
+                return res.status(401).json({
                     message: 'Invalid email or password' 
                 });
             }
@@ -50,7 +49,6 @@ const userController = {
             const isMatch = await comparePassword(password, user.password);
             if (!isMatch) {
                 return res.status(401).json({ 
-                    error: error.message, 
                     message: 'Invalid email or password' 
                 });
             }
@@ -76,8 +74,7 @@ const userController = {
 
             const user = await User.findOne({ email });
             if (!user) {
-                return res.status(404).json({ 
-                    error: error.message , 
+                return res.status(404).json({
                     message: "User not found" 
                 });
             }
@@ -107,7 +104,6 @@ const userController = {
 
         } catch (error) {
             return res.status(500).json({
-                error: error.message, 
                 message:"Server Error" 
             });
         }
@@ -121,8 +117,7 @@ const userController = {
             const user = await User.findOne({ otp });
             if (!user || new Date() > user.otpExpires) {
                 return res.status(400).json({ 
-                    message: "Invalid or expired OTP",
-                    error: error.message
+                    message: "Invalid or expired OTP"
                  });
             }
 
@@ -137,8 +132,7 @@ const userController = {
 
         } catch (error) {
             return res.status(500).json({ 
-                message: "Server Error",
-                error: error.message 
+                message: "Server Error"
             });
         }
     },
@@ -168,8 +162,7 @@ const userController = {
 
         } catch (error) {
             return res.status(500).json({
-                message: "An error occurred while fetching users",
-                error: error.message
+                message: "An error occurred while fetching users"
             });
         }
     }
