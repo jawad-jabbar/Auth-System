@@ -58,8 +58,7 @@ const postController = {
       return res.status(200).json({ post });
     } catch (error) {
       return res.status(500).json({ 
-        message: "Error fetching post",
-        error: error.message 
+        message: "Error fetching post"
       });
     }
   }

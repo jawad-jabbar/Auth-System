@@ -2,7 +2,7 @@ const Comment = require('../model/comment.model');
 const Post = require('../model/post.model');
 
 const commentController = {
-  // Create comment
+
   createComment: async (req, res) => {
     try {
       const { postId, text } = req.body;
@@ -28,8 +28,7 @@ const commentController = {
       return res.status(201).json({ comment });
     } catch (error) {
       return res.status(500).json({ 
-        message: "Error creating comment",
-        error: error.message 
+        message: "Error creating comment"
       });
     }
   },
@@ -44,8 +43,7 @@ const commentController = {
       return res.status(200).json({ comments });
     } catch (error) {
       return res.status(500).json({ 
-        message: "Error fetching comments",
-        error: error.message 
+        message: "Error fetching comments"
       });
     }
   }
