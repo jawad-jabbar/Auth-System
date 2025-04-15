@@ -62,8 +62,7 @@ const userController = {
 
         } catch (error) {
             return res.status(500).json({ 
-                message:"Server Error", 
-                error: error.message 
+                message:"Login Failed"
             });
         }
     },
@@ -71,43 +70,39 @@ const userController = {
     forgotPassword: async (req, res) => {
         try {
             const { email } = req.body;
-
+    
             const user = await User.findOne({ email });
             if (!user) {
                 return res.status(404).json({
                     message: "User not found" 
                 });
             }
-
-
+    
             const otp = otpGenerator();
-            const otpExpires = new Date(Date.now() + 60 * 1000);
-
+            const otpExpires = new Date(Date.now() + process.env.OTP_EXPIRES_MINUTES * 60 * 1000);
+    
             user.otp = otp;
             user.otpExpires = otpExpires;
             await user.save();
-
-
+    
             const mailOptions = {
                 from: process.env.EMAIL_USER,
                 to: user.email,
                 subject: "Password Reset OTP",
-                html: `<p>Your OTP for password reset is <b>${otp}</b>.</p>`,
+                html: `<p>Your OTP for password reset is <b>${otp}</b>. It expires in ${process.env.OTP_EXPIRES_MINUTES} minutes.</p>`,
             };
-
+    
             await transporter.sendMail(mailOptions);
-
-
+    
             return res.status(200).json({ 
-                message: "OTP sent to your email" 
+                message: `OTP sent to your email (valid for ${process.env.OTP_EXPIRES_MINUTES} minutes)` 
             });
-
+    
         } catch (error) {
             return res.status(500).json({
                 message:"Server Error" 
             });
         }
-
     },
 
     resetPassword: async (req, res) => {
