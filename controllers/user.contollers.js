@@ -1,6 +1,6 @@
 const User = require('../model/user.model');
 const { hashPassword, comparePassword } = require('../utils/bcrypt.utils');
-const { generateToken } = require('../services/jwt.service');
+const { generateToken, attachTokenToResponse } = require('../services/jwt.service');
 const transporter = require('../services/nodemailer.services');
 const otpGenerator = require('../utils/otp.utils');
 
@@ -18,12 +18,13 @@ const userController = {
             const newUser = await User.create({ name, email, password: hashedPassword, role});
 
             const token = generateToken(newUser);
+            attachTokenToResponse(res, token);
 
             const { password: _, ...restData } = newUser.toObject();
             return res.status(201).json({ 
                 message: 'User registered successfully', 
                 payload:{
-                    user: restData, token
+                    user: restData
                 } 
             });
 
@@ -54,10 +55,12 @@ const userController = {
             }
 
             const token = generateToken(user);
+            attachTokenToResponse(res, token);
+
             const { password: _, ...userData } = user.toObject();
             return res.status(200).json({
                 message: 'Logged in successfully',                     
-                user: userData, token 
+                user: userData 
             })
 
         } catch (error) {

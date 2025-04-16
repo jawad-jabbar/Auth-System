@@ -16,6 +16,11 @@ const tokenTasks = {
       return null;
     }
   },
+  
+  attachTokenToResponse: (res, token) => {
+    res.setHeader('Authorization', `${token}`);
+    res.setHeader('Access-Control-Expose-Headers', 'Authorization');
+  }
 };
 
 module.exports = tokenTasks;

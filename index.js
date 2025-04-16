@@ -1,21 +1,16 @@
-const dotenv = require('dotenv');
-dotenv.config();
-
+const express = require('express');
 const routes = require('./routes/routes');
-const connectdb = require('./db/connectdb');
-const express = require('express')
+const cors = require('cors');
+const app = express();
 
-const app = express()
-const PORT = process.env.PORT || 5500;
+app.use(cors({
+  exposedHeaders: ['Authorization']
+}));
 
 app.use(express.json());
 app.use('/api', routes);
 app.use('/uploads', express.static('uploads'));
 
-    
-connectdb().then(()=>{
-    app.listen(PORT, ()=>{
-        console.log(`Connection Successful ${PORT}`)
-    })
-});
+module.exports = app;
+
 

@@ -3,13 +3,15 @@ const User = require("../model/user.model");
 
 const authMiddleware = async (req, res, next) => {
   try {
-    const authHeader = req.header("Authorization");
+    const token = req.header("x-authorization") || req.cookies.token;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "Access Denied. No token provided." });
-    }
+    
+    // if (!token || !token.startsWith("Bearer ")) {
+    //   return res.status(401).json({ message: "Access Denied. No token provided." });
+    // }
+    // console.log(token)
 
-    const token = authHeader.split(" ")[1]; 
+    // token = token.split(" ")[1]; 
 
     const decoded = verifyToken(token);
     if (!decoded || !decoded.id) {
