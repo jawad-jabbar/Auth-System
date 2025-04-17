@@ -7,7 +7,7 @@ const { validateUserData } = require('../utils/validation.utils');
 const router = express.Router();
 
 
-router.post('/signup', userControler.userSignup);
+router.post('/signup',[validateMiddleware(validateUserData)], userControler.userSignup);
 router.post('/login', userControler.userLogin);
 router.post('/forgot-password', userControler.forgotPassword);
 router.post('/reset-password', userControler.resetPassword);
