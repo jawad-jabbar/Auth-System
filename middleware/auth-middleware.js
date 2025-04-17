@@ -5,14 +5,6 @@ const authMiddleware = async (req, res, next) => {
   try {
     const token = req.header("x-authorization") || req.cookies.token;
 
-    
-    // if (!token || !token.startsWith("Bearer ")) {
-    //   return res.status(401).json({ message: "Access Denied. No token provided." });
-    // }
-    // console.log(token)
-
-    // token = token.split(" ")[1]; 
-
     const decoded = verifyToken(token);
     if (!decoded || !decoded.id) {
       return res.status(401).json({ message: "Invalid Token" });
