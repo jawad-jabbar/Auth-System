@@ -1,26 +1,21 @@
 const Post = require("../model/post.model");
-const cloudinary = require("../config/cloudinary");
-const fs = require("fs");
+const { uploadBufferToCloudinary } = require("../utils/uploadToCloudinary");
 
 const postController = {
   createPost: async (req, res) => {
     const { title, content } = req.body;
-    const images = [];
+    let imageUrls = [];
 
     if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
-        const result = await cloudinary.uploader.upload(file.path, {
-          folder: "posts",
-        });
-        images.push(result.secure_url);
-        fs.unlinkSync(file.path); // Clean up
-      }
+      imageUrls = await Promise.all(
+        req.files.map((file) => uploadBufferToCloudinary(file.buffer, "posts"))
+      );
     }
 
     const post = await Post.create({
       title,
       content,
-      images,
+      images: imageUrls,
       createdBy: req.user._id,
     });
 
