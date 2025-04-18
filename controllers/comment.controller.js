@@ -30,7 +30,6 @@ const commentController = {
     return res.status(201).json({ comment });
   },
 
-  // Get comments for a post
   getPostComments: async (req, res) => {
     const comments = await Comment.find({ postId: req.params.postId })
       .populate("createdBy", "name email")

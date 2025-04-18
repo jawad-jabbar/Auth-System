@@ -22,7 +22,6 @@ const postController = {
     return res.status(201).json({ post });
   },
 
-  // Get all posts
   getAllPosts: async (req, res) => {
     const posts = await Post.find()
       .populate("createdBy", "name email")
@@ -32,7 +31,6 @@ const postController = {
     return res.status(200).json({ posts });
   },
 
-  // Get single post
   getPostById: async (req, res) => {
     const post = await Post.findById(req.params.id)
       .populate("createdBy", "name email")
